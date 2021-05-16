@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body {
+            height: 100vh;
+            width: 100vw;
+            margin: 0px;
+            padding: 0px;
+        }
+
+        .main {
+            width: 100px;
+            height: 100px;
+            background-color: skyblue;
+            position: absolute;
+            left: 0px;
+            top: 0px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main"></div>
+    <script>
+        let dom = document.getElementsByClassName("main")[0];
+        let isDrag = false;
+        let lLeft;
+        let lTop;
+        let target;
+        let allWith = document.documentElement.offsetWidth;
+        let allHeight = document.documentElement.offsetHeight;
+
+        dom.onmousedown = function (e) {
+            let domClient = dom.getBoundingClientRect()
+            isDrag = true;
+            lLeft = e.clientX - domClient.left;
+            lTop = e.clientY - domClient.top;
+            target = e.target;
+        }
+        document.onmousemove = function (e) {
+            if (isDrag) {
+                let stanceX = e.clientX - lLeft
+                let stanceY = e.clientY - lTop;
+                if (stanceX < 0) {
+                    stanceX = 0;
+                }
+                if (stanceX + 100 > allWith) {
+                    stanceX = Number(allWith - 100);
+                }
+
+                if (stanceY < 0) {
+                    stanceY = 0;
+                }
+                if (stanceY + 100 > allHeight) {
+                    stanceY = Number(allHeight - 100);
+                }
+                target.style.left = stanceX + "px";
+                target.style.top = stanceY + "px";
+            }
+        }
+        dom.onmouseup = function () {
+            isDrag = false;
+        }
+    </script>
+</body>
+
+</html>
