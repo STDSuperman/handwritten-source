@@ -11,14 +11,14 @@
 所以返回 [0, 1]
  */
 function findTwoIndex(arr, target) {
-  let len = arr.length;
-  for (let i = 0; i < len; i++) {
-    for (let j = i + 1; j < len; j++) {
-      if (arr[i] + arr[j] == target) {
-        return [i, j];
-      }
-    }
-  }
+	let len = arr.length;
+	for (let i = 0; i < len; i++) {
+		for (let j = i + 1; j < len; j++) {
+			if (arr[i] + arr[j] == target) {
+				return [i, j];
+			}
+		}
+	}
 }
 
 // console.log(findTwoIndex([1,23,4,7,213,64],30))
@@ -32,20 +32,17 @@ function findTwoIndex(arr, target) {
  */
 
 function reverseNum(num) {
-  /**判断正负 */
-  let isMimus = typeof num == "number" && !isNaN(num) && num < 0;
-  num = Math.abs(num); //转绝对值
-  let tempArr = num
-    .toLocaleString()
-    .replace(/,/g, "")
-    .split("");
-  let result = isMimus
-    ? -Number(tempArr.reverse().join(""))
-    : Number(tempArr.reverse().join(""));
-  if (result > Math.pow(2, 31) - 1 || result < -Math.pow(2, 31)) {
-    return 0;
-  }
-  return result;
+	/**判断正负 */
+	let isMimus = typeof num == "number" && !isNaN(num) && num < 0;
+	num = Math.abs(num); //转绝对值
+	let tempArr = num.toLocaleString().replace(/,/g, "").split("");
+	let result = isMimus
+		? -Number(tempArr.reverse().join(""))
+		: Number(tempArr.reverse().join(""));
+	if (result > Math.pow(2, 31) - 1 || result < -Math.pow(2, 31)) {
+		return 0;
+	}
+	return result;
 }
 //  console.log(reverseNum(-1534444444444455))
 
@@ -58,17 +55,11 @@ function reverseNum(num) {
  */
 
 function palindromeNumber(num) {
-  /**为负数的时候 */
-  if (num < 0 || (num % 10 == 0 && num != 0)) return false;
-  num = String(num);
-  if (
-    num
-      .split("")
-      .reverse()
-      .join("") == num
-  )
-    return true;
-  return false;
+	/**为负数的时候 */
+	if (num < 0 || (num % 10 == 0 && num != 0)) return false;
+	num = String(num);
+	if (num.split("").reverse().join("") == num) return true;
+	return false;
 }
 //  console.log(palindromeNumber(1221))
 
@@ -95,26 +86,26 @@ C 可以放在 D (500) 和 M (1000) 的左边，来表示 400 和 900。
  */
 
 function romanNumber(num) {
-  let romanNumberMap = {
-    I: 1,
-    V: 5,
-    X: 10,
-    L: 50,
-    C: 100,
-    D: 500,
-    M: 1000
-  };
-  let len = num.length;
-  let result = 0;
-  for (let i = 0; i < len; i++) {
-    let temp = romanNumberMap[num[i]];
-    if (romanNumberMap[num[i]] < romanNumberMap[num[i + 1]]) {
-      temp = romanNumberMap[num[i + 1]] - romanNumberMap[num[i]];
-      i++;
-    }
-    result += temp;
-  }
-  return result;
+	let romanNumberMap = {
+		I: 1,
+		V: 5,
+		X: 10,
+		L: 50,
+		C: 100,
+		D: 500,
+		M: 1000,
+	};
+	let len = num.length;
+	let result = 0;
+	for (let i = 0; i < len; i++) {
+		let temp = romanNumberMap[num[i]];
+		if (romanNumberMap[num[i]] < romanNumberMap[num[i + 1]]) {
+			temp = romanNumberMap[num[i + 1]] - romanNumberMap[num[i]];
+			i++;
+		}
+		result += temp;
+	}
+	return result;
 }
 //  console.log(romanNumber("MCMXCIV"))
 /**
@@ -129,20 +120,20 @@ function romanNumber(num) {
     示例 2:
  */
 function getCommonPrefix(arr) {
-  if (!arr.length) return "";
-  let base = 0,
-    preFixStr = "";
-  let minLen = arr[0].length;
-  preFixStr = arr[0][base];
-  while (base <= minLen) {
-    preFixStr = arr[0].slice(0, ++base);
-    for (let item of arr.values()) {
-      if (!(item.slice(0, base) == preFixStr)) {
-        return base == 0 ? "" : item.slice(0, base - 1);
-      }
-    }
-  }
-  return preFixStr;
+	if (!arr.length) return "";
+	let base = 0,
+		preFixStr = "";
+	let minLen = arr[0].length;
+	preFixStr = arr[0][base];
+	while (base <= minLen) {
+		preFixStr = arr[0].slice(0, ++base);
+		for (let item of arr.values()) {
+			if (!(item.slice(0, base) == preFixStr)) {
+				return base == 0 ? "" : item.slice(0, base - 1);
+			}
+		}
+	}
+	return preFixStr;
 }
 console.log(getCommonPrefix([""]));
 
@@ -161,25 +152,25 @@ console.log(getCommonPrefix([""]));
  */
 
 function judgeBrackets(str) {
-  let judge = {
-    "[": "]",
-    "(": ")",
-    "{": "}"
-  };
-  let tempArr = str.split("");
-  let len = tempArr.length;
-  let arr = [];
-  for (let i = 0; i < len; i++) {
-    if (tempArr[i] == judge[arr[arr.length - 1]]) {
-      arr.pop();
-    } else {
-      arr.push(tempArr[i]);
-    }
-  }
-  if (arr.length == 0) {
-    return true;
-  }
-  return false;
+	let judge = {
+		"[": "]",
+		"(": ")",
+		"{": "}",
+	};
+	let tempArr = str.split("");
+	let len = tempArr.length;
+	let arr = [];
+	for (let i = 0; i < len; i++) {
+		if (tempArr[i] == judge[arr[arr.length - 1]]) {
+			arr.pop();
+		} else {
+			arr.push(tempArr[i]);
+		}
+	}
+	if (arr.length == 0) {
+		return true;
+	}
+	return false;
 }
 //  console.log(judgeBrackets("{[]}"))
 
@@ -194,64 +185,64 @@ function judgeBrackets(str) {
  */
 
 function mergeLinkList(l1, l2) {
-  let mergeHead = {
-    val: -1,
-    next: null
-  };
-  let cry = mergeHead;
-  while (l1 && l2) {
-    if (l1.val < l2.val) {
-      cry.next = l1;
-      l1 = l1.next;
-    } else {
-      cry.next = l2;
-      l2 = l2.next;
-    }
-    cry = cry.next;
-  }
-  cry.next = l1 || l2;
-  return mergeHead.next;
+	let mergeHead = {
+		val: -1,
+		next: null,
+	};
+	let cry = mergeHead;
+	while (l1 && l2) {
+		if (l1.val < l2.val) {
+			cry.next = l1;
+			l1 = l1.next;
+		} else {
+			cry.next = l2;
+			l2 = l2.next;
+		}
+		cry = cry.next;
+	}
+	cry.next = l1 || l2;
+	return mergeHead.next;
 }
 l1 = {
-  val: 1,
-  next: {
-    val: 2,
-    next: {
-      val: 4,
-      next: null
-    }
-  }
+	val: 1,
+	next: {
+		val: 2,
+		next: {
+			val: 4,
+			next: null,
+		},
+	},
 };
 l2 = {
-  val: 1,
-  next: {
-    val: 3,
-    next: {
-      val: 5,
-      next: null
-    }
-  }
+	val: 1,
+	next: {
+		val: 3,
+		next: {
+			val: 5,
+			next: null,
+		},
+	},
 };
 console.log(mergeLinkList(l1, l2));
 // **********************************************
 function judgeBrackets(str) {
-  let judge = {
-    "(": ")",
-    '"': '"',
-    "'": "'"
-  };
-  let tempArr = str.split("");
-  let len = tempArr.length;
-  let arr = [];
-  for (let i = 0; i < len; i++) {
-    if (tempArr[i] == judge[arr[arr.length - 1]]) {
-      arr.pop();
-    } else {
-      arr.push(tempArr[i]);
-    }
-  }
-  if (arr.length == 0) {
-    return true;
-  }
-  return false;
+	let judge = {
+		"(": ")",
+		'"': '"',
+		"'": "'",
+	};
+	let tempArr = str.split("");
+	let len = tempArr.length;
+	let arr = [];
+	for (let i = 0; i < len; i++) {
+		if (tempArr[i] == judge[arr[arr.length - 1]]) {
+			arr.pop();
+		} else {
+			arr.push(tempArr[i]);
+		}
+	}
+	if (arr.length == 0) {
+		return true;
+	}
+	return false;
 }
