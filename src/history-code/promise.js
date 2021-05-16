@@ -25,18 +25,28 @@ function Promise(fn) {
 	self.onRejectedCallBack = [];
 	/**执行成功回调 */
 	function resolve(value) {
-		if (self.status === PENDDING) {
-			self.status = FULFILLED;
-			self.value = value;
-			self.onFulfilledCallBack.forEach((fn) => fn());
-		}
+		setTimeout(() => {
+			if (value && value.then) {
+				return value.then(resolve, reject);
+			}
+			if (self.status === PENDDING) {
+				self.status = FULFILLED;
+				self.value = value;
+				self.onFulfilledCallBack.forEach((fn) => fn());
+			}
+		})
 	}
 	function reject(reason) {
-		if (self.status === PENDDING) {
-			self.status = REJECTED;
-			self.reason = reason;
-			self.onRejectedCallBack.forEach((fn) => fn());
-		}
+		setTimeout(() => {
+			if (reason && reason.then) {
+				return reason.then(resolve, reject);
+			}
+			if (self.status === PENDDING) {
+				self.status = REJECTED;
+				self.reason = reason;
+				self.onRejectedCallBack.forEach((fn) => fn());
+			}
+		})
 	}
 
 	/**立即执行传入的函数,并加一层捕获异常 */
@@ -53,8 +63,8 @@ Promise.prototype.then = function (onFulfilled, onRejected) {
 	onRejected =
 		typeof onRejected === "function"
 			? onRejected
-			: (reason) => {
-					throw reason;
+			: (r) => {
+					throw r;
 			  };
 	let self = this;
 	let promise2 = new Promise(function (resolve, reject) {
@@ -108,6 +118,7 @@ function resolvePromise(promise2, x, resolve, reject) {
 	if (x === promise2) {
 		return reject(new TypeError("Chaining cycle"));
 	}
+
 	if (typeof x === "function" || (x && typeof x === "object")) {
 		try {
 			let then = x.then;
@@ -130,13 +141,81 @@ function resolvePromise(promise2, x, resolve, reject) {
 			}
 		} catch (error) {
 			if (used) return;
-      		used = true;
+			used = true;
 			reject(error);
 		}
 	} else {
 		resolve(x);
 	}
 }
+
+Promise.all = function (promises) {
+	return new Promise((resolve, reject) => {
+		const len = promises.length;
+		const result = [];
+		let count = 0;
+
+		if (len === 0) return resolve([]);
+
+		promises.forEach((fn, index) => {
+			Promise.resolve(fn).then(value => {
+				count++;
+				result[index] = value;
+				if (count >= len) {
+					resolve(result);
+				}
+			}, e => {
+				reject(e)
+			})
+		})
+	})
+}
+
+Promise.resolve = function (val) {
+	return new Promise((resolve) => resolve(val))
+}
+
+Promise.allSettled = function (promises) {
+	return new Promise((resolve) => {
+		const len = promises.length;
+		const result = [];
+		let count = 0;
+
+		if (len === 0) return resolve([]);
+
+		promises.forEach((fn, index) => {
+			Promise.resolve(fn).then(value => {
+				count++;
+				result[index] = {status: FULFILLED, value};
+				if (count >= len) {
+					resolve(result);
+				}
+			}, reason => {
+				count++;
+				result[index] = {status: REJECTED, reason};
+				if (count >= len) {
+					resolve(result);
+				}
+			})
+		})
+	})
+}
+
+Promise.all([new Promise((resolve) => {
+	setTimeout(() => {
+		resolve('呀呀呀呀')
+	}, 1000)
+}), 21321]).then(res => {
+	console.log(res, 'all结果');
+})
+
+Promise.allSettled([new Promise((resolve, reject) => {
+	setTimeout(() => {
+		reject('呀呀呀呀')
+	}, 1000)
+}), 21321]).then(res => {
+	console.log(res, 'allSettled结果');
+})
 
 // 添加测试 Promise A+
 Promise.defer = Promise.deferred = function () {
@@ -148,8 +227,6 @@ Promise.defer = Promise.deferred = function () {
 	return dfd;
 };
 
-module.exports = Promise;
-
 let test = new Promise(function (resolve, reject) {
 	setTimeout(() => {
 		resolve("dsadsadaSD");
@@ -157,10 +234,8 @@ let test = new Promise(function (resolve, reject) {
 });
 test.then(
 	(data) => {
-		console.log(data);
 		return new Promise((r) => {
-			console.log(r);
-			return "嵌套";
+			r('嵌套');
 		});
 	},
 	(error) => {
@@ -169,3 +244,5 @@ test.then(
 ).then((res) => {
 	console.log(res);
 });
+
+module.exports = Promise;
