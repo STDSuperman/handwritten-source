@@ -19,6 +19,8 @@ const REJECTED = "rejected";
 function Promise(fn) {
 	let self = this;
 	self.status = PENDDING;
+	self.value = undefined;
+	self.reason = undefined;
 	self.onFulfilledCallBack = [];
 	self.onRejectedCallBack = [];
 	/**执行成功回调 */
@@ -26,14 +28,14 @@ function Promise(fn) {
 		if (self.status === PENDDING) {
 			self.status = FULFILLED;
 			self.value = value;
-			self.onFulfilledCallBack.forEach((fn) => fn(self.value));
+			self.onFulfilledCallBack.forEach((fn) => fn());
 		}
 	}
 	function reject(reason) {
 		if (self.status === PENDDING) {
 			self.status = REJECTED;
 			self.reason = reason;
-			self.onRejectedCallBack.forEach((fn) => fn(self.reason));
+			self.onRejectedCallBack.forEach((fn) => fn());
 		}
 	}
 
@@ -103,9 +105,10 @@ Promise.prototype.then = function (onFulfilled, onRejected) {
 
 function resolvePromise(promise2, x, resolve, reject) {
 	let used;
-	if (x == promise2) {
-		reject(new TypeError("Chaining cycle"));
-	} else if ((x && typeof x === "function") || typeof x === "object") {
+	if (x === promise2) {
+		return reject(new TypeError("Chaining cycle"));
+	}
+	if (typeof x === "function" || (x && typeof x === "object")) {
 		try {
 			let then = x.then;
 			if (typeof then === "function") {
@@ -123,17 +126,29 @@ function resolvePromise(promise2, x, resolve, reject) {
 					}
 				);
 			} else {
-				if (used) return;
-				used = true;
 				resolve(x);
 			}
 		} catch (error) {
+			if (used) return;
+      		used = true;
 			reject(error);
 		}
 	} else {
-		x && resolve(x);
+		resolve(x);
 	}
 }
+
+// 添加测试 Promise A+
+Promise.defer = Promise.deferred = function () {
+	let dfd = {};
+	dfd.promise = new Promise((resolve, reject) => {
+		dfd.resolve = resolve;
+		dfd.reject = reject;
+	});
+	return dfd;
+};
+
+module.exports = Promise;
 
 let test = new Promise(function (resolve, reject) {
 	setTimeout(() => {
@@ -143,8 +158,14 @@ let test = new Promise(function (resolve, reject) {
 test.then(
 	(data) => {
 		console.log(data);
+		return new Promise((r) => {
+			console.log(r);
+			return "嵌套";
+		});
 	},
 	(error) => {
 		console.log(error, "=====");
 	}
-);
+).then((res) => {
+	console.log(res);
+});
