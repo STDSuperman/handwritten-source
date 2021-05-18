@@ -1,4 +1,4 @@
-import '../traverse';
+import '../array-traverse';
 
 const testArr = [1, 2]
 
