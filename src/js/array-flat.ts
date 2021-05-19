@@ -23,3 +23,27 @@ export function flatByCycle(arr: any[]): any[] {
     }
     return result;
 }
+
+enum FormatType {
+    number = 1,
+    string = 2,
+}
+
+type ResultArr = number[] | string[];
+
+// 对纯数字(或数字字符串)数组扁平化
+export function flatByToString(arr: any[], type: FormatType = FormatType.number): any[]{
+    let result: ResultArr = arr.toString().split(',');
+    if (type === 1) {
+        result = result.map(item => Number(item));
+    }
+    return result;
+}
+
+export function flatByJoin(arr: any[], type: FormatType = FormatType.number): any[]{
+    let result: ResultArr = arr.join().split(',');
+    if (type === 1) {
+        result = result.map(item => Number(item));
+    }
+    return result;
+}
