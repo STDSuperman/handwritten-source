@@ -1,11 +1,11 @@
 /**大数反转 */
 var reverse = function (x) {
-	let res = "";
+	let res = '';
 	if (x < 0) {
-		res += "-";
+		res += '-';
 	}
-	let arr = Math.abs(x).toString().split("").reverse().join("");
-	res += +arr.replace(/^0+/, "");
+	let arr = Math.abs(x).toString().split('').reverse().join('');
+	res += +arr.replace(/^0+/, '');
 	if (res >= Math.pow(2, 31) || res <= Math.pow(2, 31) - 1) {
 		return 0;
 	}
@@ -63,7 +63,7 @@ var detectCycle = function (head) {
 			arr.push(head.val);
 		}
 	}
-	return "no cycle";
+	return 'no cycle';
 };
 
 console.log(
@@ -91,4 +91,95 @@ function getRsult(data, n, sum) {
 		return getRsult(temp, n - 1, sum - data[0]) || getRsult(temp, n, sum);
 	}
 }
-console.log(getRsult([1, 2, 3, 4, 5, 6, 7], 4, 19));
+// console.log(getRsult([1, 2, 3, 4, 5, 6, 7], 4, 19));
+
+class LRUCache {
+	linkList;
+	tail;
+	head;
+	capacity;
+	size = 0;
+	cache = new Map();
+	constructor(capacity) {
+		this.head = new LinkNode(null);
+		this.tail = new LinkNode(null);
+		this.head.next = this.tail;
+		this.tail.pre = this.head;
+		this.capacity = capacity;
+	}
+
+	get(key) {
+		const result = this.cache.get(key);
+		if (!result) return -1;
+		this.moveToHead(result);
+		return result.value;
+	}
+
+	removeNode(node) {
+		node.pre.next = node.next;
+		node.next.pre = node.pre;
+	}
+
+	removeFromTail() {
+		const pre = this.tail.pre;
+		this.removeNode(this.tail.pre);
+		return pre;
+	}
+
+	put(key, value) {
+		const currentNot = this.cache.get(key);
+		if (currentNot) {
+			currentNot.value = value;
+			this.moveToHead(currentNot);
+			return;
+		}
+		const node = new LinkNode(key, value);
+		this.cache.set(key, node);
+		this.addToHead(node);
+		this.size++;
+		if (this.size > this.capacity) {
+			this.size--;
+			const tailNode = this.removeFromTail();
+			this.cache.delete(tailNode.key);
+		}
+	}
+
+	addToHead(node) {
+		node.pre = this.head;
+		node.next = this.head.next;
+		this.head.next.pre = node;
+		this.head.next = node;
+	}
+
+	moveToHead(node) {
+		this.removeNode(node);
+		this.addToHead(node);
+	}
+}
+
+class LinkNode {
+	value;
+	next;
+	pre;
+	key;
+	constructor(key, value) {
+		this.value = value;
+		this.next = null;
+		this.pre = null;
+		this.key = key;
+	}
+}
+const testLRU = new LRUCache(2);
+console.log(
+	testLRU.put(1, 1),
+	testLRU.put(2, 2),
+	testLRU.get(1),
+	testLRU.put(3, 3),
+	testLRU.get(2),
+	testLRU.put(4, 4),
+	testLRU.get(1),
+	testLRU.get(3),
+	testLRU.get(4)
+);
+// const testLRU = new LRUCache(1);
+// console.log(testLRU.put(2, 1), testLRU.get(2),)
