@@ -2,8 +2,8 @@
  * Promise源码解析
  * new 一个promise的时候需要传递一个执行器函数，立即执行
  * 执行器函数只接受两个参数 resolve reject
- * Promise有三个状态 pedding fulfilled rejected
- * 状态改变只能由pedding -> fulfilled 或者 pendding -> rejected
+ * Promise有三个状态 pending fulfilled rejected
+ * 状态改变只能由pending -> fulfilled 或者 pending -> rejected
  * 状态一经确定就无法改变
  *
  * Promise 的 then 可以链式调用(返回一个promise对象)
@@ -13,12 +13,12 @@
  * 如果返回值是其他类型则直接作为下一个then对应的成功或失败的回调(在成功的回调返回就走下一个then成功的回调，反之亦然)
  *
  */
-const PENDDING = "pendding";
+const PENDING = "pending";
 const FULFILLED = "fulfilled";
 const REJECTED = "rejected";
 function Promise(fn) {
 	let self = this;
-	self.status = PENDDING;
+	self.status = PENDING;
 	self.value = undefined;
 	self.reason = undefined;
 	self.onFulfilledCallBack = [];
@@ -29,7 +29,7 @@ function Promise(fn) {
 			if (value && value.then) {
 				return value.then(resolve, reject);
 			}
-			if (self.status === PENDDING) {
+			if (self.status === PENDING) {
 				self.status = FULFILLED;
 				self.value = value;
 				self.onFulfilledCallBack.forEach((fn) => fn());
@@ -41,7 +41,7 @@ function Promise(fn) {
 			if (reason && reason.then) {
 				return reason.then(resolve, reject);
 			}
-			if (self.status === PENDDING) {
+			if (self.status === PENDING) {
 				self.status = REJECTED;
 				self.reason = reason;
 				self.onRejectedCallBack.forEach((fn) => fn());
@@ -86,7 +86,7 @@ Promise.prototype.then = function (onFulfilled, onRejected) {
 			} catch (error) {
 				reject(error);
 			}
-		} else if (self.status === PENDDING) {
+		} else if (self.status === PENDING) {
 			self.onFulfilledCallBack.push(() =>
 				setTimeout(() => {
 					try {
