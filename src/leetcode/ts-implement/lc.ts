@@ -27,6 +27,7 @@ function handle(i: number, j: number, arr: any[]) {
 // console.log('result：', removeElement([4,5], 5));
 
 /**
+ * 移动数组
  * 给定一个数组，将数组中的元素向右移动 k 个位置，其中 k 是非负数
  */
 function rotate(nums: number[], k: number): void {
@@ -42,6 +43,32 @@ function rotate(nums: number[], k: number): void {
         nums[j] = waitForMove[j];
     }
 };
-let arr = [1,2]
-rotate(arr, 3);
-console.log(arr)
+// let arr = [1,2]
+// rotate(arr, 3);
+// console.log(arr)
+
+
+// 15. 三数之和
+
+function threeSum(nums: number[]): number[][] {
+    if (nums.length < 3) return [];
+    let length = nums.length;
+    const result = [];
+    nums.sort((a, b) => a - b);
+    for (let first = 0; first < length; first++) {
+        if (first > 0 && nums[first] === nums[first - 1]) continue;
+        let third = length - 1;
+        const target = -nums[first];
+        for (let second = first + 1; second < length; second++) {
+            if (second > first + 1 && nums[second] === nums[second - 1]) continue;
+            while(second < third && (nums[second] + nums[third]) > target) third--;
+            if (second < third && (nums[second] + nums[third]) === target) {
+                let item = new Array<number>();
+                item = item.concat(nums[first], nums[second], nums[third]);
+                result.push(item);
+            }
+        }
+    }
+    return result;
+};
+console.log(threeSum([-1,0,1,2,-1,-4]));
