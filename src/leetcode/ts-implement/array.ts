@@ -92,4 +92,38 @@ function search(nums: number[], target: number): number {
     return -1;
 };
 
-console.log(search([-1,0,3,5,9,12], 9));
+// console.log(search([-1,0,3,5,9,12], 9));
+
+// 螺旋矩阵
+function generateMatrix(n: number): number[][] {
+    if (!n) return [[]];
+    const arr: number[][] = [[]];
+    let originVal = 1;
+    let x = 0;
+    let y = 0;
+    const maxVal = n * n;
+    let direct = 0;
+
+    const direction = [
+        [0, 1],
+        [1, 0],
+        [0, -1],
+        [-1, 0]
+    ]
+
+    while (x < n && x >= 0 && y >= 0 && y < n && originVal <= maxVal) {
+        if (!Array.isArray(arr[x])) arr[x] = [];
+        arr[x][y] = originVal++;
+        const nextX = x + direction[direct][0];
+        const nextY = y + direction[direct][1];
+        if (nextX >= n || nextX < 0 || nextY >= n || nextY < 0 || arr[nextX]?.[nextY]) {
+            direct++;
+            if (direct > 3) direct = 0;
+        }
+        x = x + direction[direct][0];
+        y = y + direction[direct][1];
+    }
+    return arr;
+};
+
+console.log(generateMatrix(3))
