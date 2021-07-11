@@ -52,4 +52,25 @@ const treeB = {
     }
 }
 
-console.log('result：', isSubStructure(treeA as any, treeB as any));
+/**
+ * 实现 pow(x, n) ，即计算 x 的 n 次幂函数（即，xn）。不得使用库函数，同时不需要考虑大数问题。
+
+方案：快速幂
+ */
+
+function myPow(x: number, n: number): number {
+    if (x === 0) return 0;
+    let res = 1.0;
+    if (n < 0) {
+        x = 1 / x;
+        n = -n;
+    }
+    while (n > 0) {
+        if ((n & 1) === 1) res *= x;
+        x *= x;
+        n >>>= 1;
+    }
+    return res;
+};
+
+console.log('result：', myPow(2.00000, -2147483648))
