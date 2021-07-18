@@ -73,4 +73,47 @@ function myPow(x: number, n: number): number {
     return res;
 };
 
-console.log('result：', myPow(2.00000, -2147483648))
+// console.log('result：', myPow(2.00000, -2147483648))
+
+/**
+ *剑指 Offer 40. 最小的k个数
+ *输入整数数组 arr ，找出其中最小的 k 个数。例如，输入4、5、1、6、2、7、3、8这8个数字，则最小的4个数字是1、2、3、4。
+ */
+
+function getLeastNumbers(arr: number[], k: number): number[] {
+    if (arr.length <= 1) return arr;
+    randomSelect(arr, 0, arr.length - 1, k);
+    return arr.slice(0, k)
+};
+
+function randomSelect(arr: number[], start: number, end: number, k: number) {
+    if (start >= end) return;
+    const mid = partition(arr, start, end);
+    const num = mid - start + 1;
+    if (num === k) {
+        return
+    } else if (num > k) {
+        randomSelect(arr, start, mid - 1, k)
+    } else {
+        randomSelect(arr, mid + 1, end, k - num)
+    };
+}
+
+function partition(arr: number[], start: number, end: number) {
+    const base = start;
+    const key = arr[base]
+    while (start < end) {
+        while (start < end && arr[end] > key) end--;
+        if (start < end) {
+            arr[start++] = arr[end]
+        }
+        while (start < end && arr[start] < key) start++;
+        if (start < end) {
+            arr[end--] = arr[start];
+        }
+    }
+    arr[start] = key;
+    return start;
+}
+
+console.log(getLeastNumbers([1, 3, 4, 2, 4, 1, 3, 10], 4))
