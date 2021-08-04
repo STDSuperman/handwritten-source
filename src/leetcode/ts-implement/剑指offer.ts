@@ -116,4 +116,87 @@ function partition(arr: number[], start: number, end: number) {
     return start;
 }
 
-console.log(getLeastNumbers([1, 3, 4, 2, 4, 1, 3, 10], 4))
+// console.log(getLeastNumbers([1, 3, 4, 2, 4, 1, 3, 10], 4))
+
+
+
+/**
+ * 215. 数组中的第K个最大元素
+ */
+
+// 快排法
+ function findKthLargest1(nums: number[], k: number): number {
+    let result = Infinity;
+    partitionKth(nums, 0, nums.length - 1, k);
+    console.log(nums.slice(0, k))
+    for (let i = 0; i < k; i++) {
+        result = Math.min(result, nums[i])
+    }
+    return result;
+};
+
+function partitionKth(arr: number[], start: number, end: number, k: number): number {
+    let i = start;
+    let j = end;
+    const baseKey = arr[j];
+    while (i < j) {
+        while (i < j && arr[i] >= baseKey) i++;
+        if (i < j) {
+            arr[j--] = arr[i];
+        }
+        while (i < j && arr[j] <= baseKey) j--;
+        if (i < j) {
+            arr[i++] = arr[j];
+        }
+    }
+    arr[i] = baseKey;
+    if (i < k - 1) {
+        return partitionKth(arr, i + 1, end, k);
+    } else if (i > k - 1) {
+        return partitionKth(arr, 0, i - 1, k);
+    } else {
+        return i - 1;
+    }
+}
+
+// 堆排法
+function findKthLargest(nums: number[], k: number): number {
+    let len = nums.length;
+    buildHeapfy(nums, len);
+    for (let i = nums.length - 1; i >= nums.length - k + 1; i--) {
+        swap(nums, 0, i);
+        len--;
+        maxHeapify(nums, 0, len);
+    }
+    return nums[0]
+};
+
+function buildHeapfy(arr: number[], len: number) {
+    for (let i = ~~(len / 2 - 1); i >= 0; i--) {
+        maxHeapify(arr, i, len);
+    }
+}
+
+function maxHeapify(arr: number[], i: number, len: number) {
+    let l = 2 * i;
+    let r = 2 * i + 1;
+    let maxValIndex = i;
+    if (l < len && arr[l] > arr[maxValIndex]) {
+        maxValIndex = l;
+    }
+    if (r < len && arr[r] > arr[maxValIndex]) {
+        maxValIndex = r;
+    }
+    if (maxValIndex !== i) {
+        swap(arr, i, maxValIndex)
+        maxHeapify(arr, maxValIndex, len);
+    }
+}
+
+function swap(arr: number[], i: number, j: number) {
+    const temp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = temp;
+}
+
+console.log(findKthLargest([3,2,3,1,2,4,5,5,6], 1))
