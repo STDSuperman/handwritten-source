@@ -178,8 +178,8 @@ function buildHeapfy(arr: number[], len: number) {
 }
 
 function maxHeapify(arr: number[], i: number, len: number) {
-    let l = 2 * i;
-    let r = 2 * i + 1;
+    let l = 2 * i + 1;
+    let r = 2 * i + 2;
     let maxValIndex = i;
     if (l < len && arr[l] > arr[maxValIndex]) {
         maxValIndex = l;
