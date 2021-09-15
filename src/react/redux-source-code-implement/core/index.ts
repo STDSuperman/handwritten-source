@@ -24,6 +24,9 @@ class Store {
 
 	subscribe(cb: ISubListenerCb) {
 		this.listeners.push(cb);
+		return () => {
+			this.listeners = this.listeners.filter(ls => ls !== cb);
+		}
 	}
 
 	getState() { return this.state }
