@@ -61,3 +61,5 @@ export const combineReducers = (reducerObj: Record<string, IReducer>): IReducer 
 		return newState;
 	}
 }
+
+export const applyMiddleware = () => {}
