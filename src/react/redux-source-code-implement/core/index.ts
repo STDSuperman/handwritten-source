@@ -1,15 +1,18 @@
 
 export type ISubListenerCb = () => unknown;
-
 export type IAction = {
 	type: String | Symbol;
 	[key: string]: any
 }
-
 export type IState = Record<string, any> | undefined
-
 export type IReducer = (state: any, action: IAction) => IState;
-
+export type IMiddleware = (...args: any[]) => any
+export type ICreateStore = (reducer: IReducer, initialState?: IState) => Store;
+export type IDispatch = (action: IAction) => void;
+export type IMiddlewareApi = {
+	getState: () => IState;
+	dispatch: IDispatch
+}
 class Store {
 	private state: IState;
 	private listeners: ISubListenerCb[] = [];
@@ -43,7 +46,7 @@ class Store {
 	}
 };
 
-export const createStore = (reducer: IReducer, initialState?: IState) => {
+export const createStore: ICreateStore = (reducer, initialState) => {
 	const store = new Store(reducer, initialState);
 	return store;
 }
@@ -62,4 +65,31 @@ export const combineReducers = (reducerObj: Record<string, IReducer>): IReducer 
 	}
 }
 
-export const applyMiddleware = () => {}
+export const applyMiddleware = (...middleware: IMiddleware[]) => {
+	return (createStore: ICreateStore) => {
+		(reducer: IReducer, initialState: IState) => {
+			const store = createStore(reducer, initialState);
+			const middlewareApi = {
+				getState: store.getState,
+				dispatch: store.dispatch
+			};
+			const middlewareList = middleware.map(md => md(middlewareApi));
+			const midDispatch = compose(...middlewareList)(store.dispatch);
+
+			return {
+				...store,
+				dispatch: midDispatch
+			}
+		}
+	}
+}
+
+export function compose(...middleware: IMiddleware[]): IMiddleware{
+	if (!middleware.length) return arg => arg;
+	if (middleware.length === 1) return middleware[0];
+	return middleware.reduce((a, b) => {
+		return (...args) => {
+			return a(b(args));
+		}
+	})
+}

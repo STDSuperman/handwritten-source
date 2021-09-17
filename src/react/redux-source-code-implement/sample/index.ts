@@ -1,4 +1,10 @@
-import { createStore, IState, IAction, combineReducers } from '../core/index';
+import {
+	createStore,
+	IState, IAction,
+	combineReducers,
+	IMiddlewareApi,
+	IDispatch
+} from '../core/index';
 
 const initialState = {
 	reducer1: {
@@ -27,6 +33,14 @@ function reducer1(state: IState = initialState.reducer2, action: IAction): IStat
 			return {...state, count: state.count - 1}
 		default: return state;
 	}
+}
+
+const logger1 = (middlewareApi: IMiddlewareApi) =>
+	(nextDispatch: IDispatch) =>
+		(action: IAction) => {
+			console.log('log1前', middlewareApi.getState())
+			nextDispatch(action)
+			console.log('log2后', middlewareApi.getState())
 }
 
 const store = createStore(combineReducers({
