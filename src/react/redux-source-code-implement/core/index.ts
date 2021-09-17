@@ -67,19 +67,16 @@ export const combineReducers = (reducerObj: Record<string, IReducer>): IReducer 
 
 export const applyMiddleware = (...middleware: IMiddleware[]) => {
 	return (createStore: ICreateStore) => {
-		(reducer: IReducer, initialState: IState) => {
+		return (reducer: IReducer, initialState?: IState): Store => {
 			const store = createStore(reducer, initialState);
 			const middlewareApi = {
 				getState: store.getState,
-				dispatch: store.dispatch
+				dispatch: store.dispatch.bind(store)
 			};
 			const middlewareList = middleware.map(md => md(middlewareApi));
-			const midDispatch = compose(...middlewareList)(store.dispatch);
-
-			return {
-				...store,
-				dispatch: midDispatch
-			}
+			const midDispatch = compose(...middlewareList)(middlewareApi.dispatch);
+			store.dispatch = midDispatch;
+			return store;
 		}
 	}
 }
@@ -89,7 +86,7 @@ export function compose(...middleware: IMiddleware[]): IMiddleware{
 	if (middleware.length === 1) return middleware[0];
 	return middleware.reduce((a, b) => {
 		return (...args) => {
-			return a(b(args));
+			return a(b(...args));
 		}
 	})
 }

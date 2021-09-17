@@ -1,7 +1,9 @@
 import {
 	createStore,
-	IState, IAction,
 	combineReducers,
+	applyMiddleware,
+	IState,
+	IAction,
 	IMiddlewareApi,
 	IDispatch
 } from '../core/index';
@@ -35,15 +37,27 @@ function reducer1(state: IState = initialState.reducer2, action: IAction): IStat
 	}
 }
 
-const logger1 = (middlewareApi: IMiddlewareApi) =>
-	(nextDispatch: IDispatch) =>
-		(action: IAction) => {
+const logger1 = (middlewareApi: IMiddlewareApi) => {
+	return (nextDispatch: IDispatch) => {
+		return (action: IAction) => {
 			console.log('log1前', middlewareApi.getState())
 			nextDispatch(action)
-			console.log('log2后', middlewareApi.getState())
+			console.log('log1后', middlewareApi.getState())
+		}
+	}
 }
 
-const store = createStore(combineReducers({
+const logger2 = (middlewareApi: IMiddlewareApi) => {
+	return (nextDispatch: IDispatch) => {
+		return (action: IAction) => {
+			console.log('log2前', middlewareApi.getState())
+			nextDispatch(action)
+			console.log('log2后', middlewareApi.getState())
+		}
+	}
+}
+
+const store = applyMiddleware(logger1, logger2)(createStore)(combineReducers({
 	reducer1: reducer,
 	reducer2: reducer1
 }));
