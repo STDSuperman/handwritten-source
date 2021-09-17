@@ -51,7 +51,9 @@ export const createStore: ICreateStore = (reducer, initialState) => {
 	return store;
 }
 
-export const combineReducers = (reducerObj: Record<string, IReducer>): IReducer => {
+export const combineReducers = (
+	reducerObj: Record<string, IReducer>
+): IReducer => {
 	const rdKeys = Object.keys(reducerObj);
 	return (state = {}, action): IState => {
 		const newState: IState = {};
@@ -65,9 +67,13 @@ export const combineReducers = (reducerObj: Record<string, IReducer>): IReducer 
 	}
 }
 
-export const applyMiddleware = (...middleware: IMiddleware[]) => {
+export const applyMiddleware = (
+	...middleware: IMiddleware[]
+) => {
 	return (createStore: ICreateStore) => {
-		return (reducer: IReducer, initialState?: IState): Store => {
+		return (
+			reducer: IReducer, initialState?: IState
+		): Store => {
 			const store = createStore(reducer, initialState);
 			const middlewareApi = {
 				getState: store.getState,
@@ -81,7 +87,9 @@ export const applyMiddleware = (...middleware: IMiddleware[]) => {
 	}
 }
 
-export function compose(...middleware: IMiddleware[]): IMiddleware{
+export function compose(
+	...middleware: IMiddleware[]
+): IMiddleware{
 	if (!middleware.length) return arg => arg;
 	if (middleware.length === 1) return middleware[0];
 	return middleware.reduce((a, b) => {
