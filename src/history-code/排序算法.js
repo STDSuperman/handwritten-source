@@ -21,8 +21,8 @@ function bubbleSort(arr) {
 	let len = arr.length;
 	let low = 0,
 		high = len - 1,
-		por1 = 0;
-	(por2 = 0), (tmp = 0);
+		por1 = 0
+	let por2 = 0, tmp = 0;
 	while (high - 1 > low) {
 		for (let i = low; i < high; i++) {
 			if (arr[i] > arr[i + 1]) {

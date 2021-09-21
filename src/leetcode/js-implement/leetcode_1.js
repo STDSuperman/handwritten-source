@@ -203,7 +203,7 @@ function mergeLinkList(l1, l2) {
 	cry.next = l1 || l2;
 	return mergeHead.next;
 }
-l1 = {
+const l1 = {
 	val: 1,
 	next: {
 		val: 2,
@@ -213,7 +213,7 @@ l1 = {
 		},
 	},
 };
-l2 = {
+const l2 = {
 	val: 1,
 	next: {
 		val: 3,
@@ -224,25 +224,3 @@ l2 = {
 	},
 };
 console.log(mergeLinkList(l1, l2));
-// **********************************************
-function judgeBrackets(str) {
-	let judge = {
-		"(": ")",
-		'"': '"',
-		"'": "'",
-	};
-	let tempArr = str.split("");
-	let len = tempArr.length;
-	let arr = [];
-	for (let i = 0; i < len; i++) {
-		if (tempArr[i] == judge[arr[arr.length - 1]]) {
-			arr.pop();
-		} else {
-			arr.push(tempArr[i]);
-		}
-	}
-	if (arr.length == 0) {
-		return true;
-	}
-	return false;
-}

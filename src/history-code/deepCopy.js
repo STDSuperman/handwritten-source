@@ -118,7 +118,7 @@ function deepCopy(obj) {
 		});
 
 		for (let i in data) {
-			if (data.hasOwnProperty(i)) {
+			if (Object.prototype.hasOwnProperty.call(data, i)) {
 				if (isObject(data[i])) {
 					loopList.push({
 						parent: res,

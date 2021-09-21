@@ -17,7 +17,7 @@ function moveZeroes(nums: number[]): void {
         }
         right++;
     }
-};
+}
 
 function handle(i: number, j: number, arr: any[]) {
     arr[i] = arr[j];
@@ -42,7 +42,7 @@ function rotate(nums: number[], k: number): void {
     for (let j = 0; j < waitForMove.length; j++) {
         nums[j] = waitForMove[j];
     }
-};
+}
 // let arr = [1,2]
 // rotate(arr, 3);
 // console.log(arr)
@@ -70,7 +70,7 @@ function threeSum(nums: number[]): number[][] {
         }
     }
     return result;
-};
+}
 // console.log(threeSum([-1,0,1,2,-1,-4]));
 
 
@@ -90,7 +90,7 @@ function search(nums: number[], target: number): number {
         }
     }
     return -1;
-};
+}
 
 // console.log(search([-1,0,3,5,9,12], 9));
 
@@ -124,6 +124,6 @@ function generateMatrix(n: number): number[][] {
         y = y + direction[direct][1];
     }
     return arr;
-};
+}
 
 console.log(generateMatrix(3))

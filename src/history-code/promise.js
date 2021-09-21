@@ -65,7 +65,7 @@ Promise.prototype.then = function (onFulfilled, onRejected) {
 			? onRejected
 			: (r) => {
 					throw r;
-			  };
+		};
 	let self = this;
 	let promise2 = new Promise(function (resolve, reject) {
 		if (self.status === FULFILLED) {

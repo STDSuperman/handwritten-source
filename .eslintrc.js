@@ -1,8 +1,8 @@
 module.exports = {
-  parser: 'babel-eslint',
+  parser: '@typescript-eslint/parser',
   parserOptions: {
     sourceType: 'module',
-    ecmaVersion: 2015,
+    ecmaVersion: 2018,
     ecmaFeatures: {
       modules: true
     }
@@ -12,6 +12,7 @@ module.exports = {
     browser: true
   },
   extends: [
+    'plugin:import/typescript',
     'eslint:recommended'
   ],
   plugins: [],
@@ -21,5 +22,9 @@ module.exports = {
       { varsIgnorePattern: '.*', args: 'none' }
     ]
   },
-  overrides: []
+  overrides: [],
+  globals: {
+    window: true,
+    ActiveXObject: true
+  }
 }

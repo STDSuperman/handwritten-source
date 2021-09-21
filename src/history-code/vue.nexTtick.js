@@ -1,3 +1,8 @@
+const isIOS = false;
+const isNative = () => false;
+const promise = null;
+const noop = () => {};
+
 export const nextTick = (function () {
 	//存储需要触发的回调函数
 	var callbacks = [];

@@ -103,7 +103,7 @@ function myNew(fn, ...args) {
 /**实现一个instanceof */
 function myInstanceof(left, right) {
 	left = Object.getPrototypeOf(left);
-	while (true) {
+	while (left) {
 		if (left === null) {
 			return false;
 		}
@@ -112,6 +112,7 @@ function myInstanceof(left, right) {
 		}
 		left = Object.getPrototypeOf(left);
 	}
+	return false;
 }
 
 /**防抖debounce */
