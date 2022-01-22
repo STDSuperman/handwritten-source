@@ -26,5 +26,5 @@ class Practice1 {
   }
 }
 
-// console.log(Reflect.getMetadata('AClass', Practice1));
-// console.log(Reflect.getMetadata('method', new Practice1(), 'getName'))
+console.log(Reflect.getMetadata('AClass', Practice1));
+console.log(Reflect.getMetadata('method', new Practice1(), 'getName'))
